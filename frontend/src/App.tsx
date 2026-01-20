@@ -11,6 +11,7 @@ import { PostFormModal } from './components/modals/PostFormModal';
 import { storage } from './utils/storage';
 import { DEFAULT_ADMIN_PASSWORD, STORAGE_KEYS } from './utils/constants';
 import { Post, FormData } from './types';
+import * as api from './utils/api';
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState('main');
@@ -26,6 +27,7 @@ const App: React.FC = () => {
     image: '',
     date: new Date().toISOString().split('T')[0]
   });
+  const [loading, setLoading] = useState(true);
 
   // Load posts and admin status from storage
   useEffect(() => {
@@ -33,25 +35,38 @@ const App: React.FC = () => {
   }, []);
 
   const loadData = async () => {
+    setLoading(true);
     try {
-      const postsResult = await storage.get(STORAGE_KEYS.POSTS);
-      if (postsResult) {
-        setPosts(JSON.parse(postsResult.value));
+      // Try loading from API first
+      try {
+        const posts = await api.fetchPosts();
+        setPosts(posts);
+      } catch (error) {
+        // Fallback to localStorage
+        console.log('API unavailable, loading from localStorage');
+        const postsResult = await storage.get(STORAGE_KEYS.POSTS);
+        if (postsResult) {
+          setPosts(JSON.parse(postsResult.value));
+        }
       }
 
+      // Admin session from localStorage
       const adminResult = await storage.get(STORAGE_KEYS.ADMIN_SESSION);
       if (adminResult && adminResult.value === 'true') {
         setIsAdmin(true);
       }
     } catch (error) {
       console.log('Loading initial data');
+    } finally {
+      setLoading(false);
     }
   };
 
   const saveData = async (updatedPosts: Post[]) => {
     try {
-      await storage.set(STORAGE_KEYS.POSTS, JSON.stringify(updatedPosts));
       setPosts(updatedPosts);
+      // Save to localStorage as fallback
+      await storage.set(STORAGE_KEYS.POSTS, JSON.stringify(updatedPosts));
     } catch (error) {
       console.error('Error saving data:', error);
     }
@@ -85,40 +100,59 @@ const App: React.FC = () => {
     }
   };
 
-  const handleSubmitPost = () => {
+  const handleSubmitPost = async () => {
     if (!formData.title || !formData.content) {
       alert('Please fill in all required fields');
       return;
     }
 
-    const newPost: Post = {
-      id: editingPost ? editingPost.id : Date.now(),
-      ...formData,
-      createdAt: editingPost ? editingPost.createdAt : new Date().toISOString()
-    };
+    try {
+      let updatedPost: Post;
+      if (editingPost) {
+        // Update existing post
+        updatedPost = await api.updatePost(editingPost.id.toString(), {
+          title: formData.title,
+          content: formData.content,
+          image: formData.image || '',
+          date: formData.date
+        });
+        const updatedPosts = posts.map(p => (p.id === editingPost.id ? updatedPost : p));
+        await saveData(updatedPosts);
+      } else {
+        // Create new post
+        updatedPost = await api.createPost({
+          title: formData.title,
+          content: formData.content,
+          image: formData.image || '',
+          date: formData.date
+        });
+        await saveData([updatedPost, ...posts]);
+      }
 
-    let updatedPosts: Post[];
-    if (editingPost) {
-      updatedPosts = posts.map(p => (p.id === editingPost.id ? newPost : p));
-    } else {
-      updatedPosts = [newPost, ...posts];
+      setShowPostForm(false);
+      setEditingPost(null);
+      setFormData({
+        title: '',
+        content: '',
+        image: '',
+        date: new Date().toISOString().split('T')[0]
+      });
+    } catch (error) {
+      console.error('Error saving post:', error);
+      alert('Failed to save post. Please try again.');
     }
-
-    saveData(updatedPosts);
-    setShowPostForm(false);
-    setEditingPost(null);
-    setFormData({
-      title: '',
-      content: '',
-      image: '',
-      date: new Date().toISOString().split('T')[0]
-    });
   };
 
-  const handleDeletePost = (id: number) => {
+  const handleDeletePost = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this post?')) {
-      const updatedPosts = posts.filter(p => p.id !== id);
-      saveData(updatedPosts);
+      try {
+        await api.deletePost(id);
+        const updatedPosts = posts.filter(p => p.id !== id);
+        await saveData(updatedPosts);
+      } catch (error) {
+        console.error('Error deleting post:', error);
+        alert('Failed to delete post. Please try again.');
+      }
     }
   };
 
@@ -132,6 +166,16 @@ const App: React.FC = () => {
     });
     setShowPostForm(true);
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-100">

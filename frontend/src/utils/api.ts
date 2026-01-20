@@ -1,0 +1,83 @@
+const API_BASE_URL = ((import.meta as any).env?.VITE_API_URL as string) || 'http://localhost:4000/api';
+
+function normalizePost(doc: any) {
+  return {
+    id: (doc.id ?? doc._id)?.toString(),
+    title: doc.title,
+    content: doc.content,
+    image: doc.image ?? '',
+    date: doc.date,
+    createdAt: (doc.createdAt ?? new Date().toISOString()).toString(),
+  };
+}
+
+export async function fetchPosts() {
+  const res = await fetch(`${API_BASE_URL}/posts`);
+  if (!res.ok) throw new Error('Failed to fetch posts');
+  const data = await res.json();
+  return Array.isArray(data) ? data.map(normalizePost) : [];
+}
+
+export async function createPost(data: { title: string; content: string; image: string; date: string }) {
+  const res = await fetch(`${API_BASE_URL}/posts`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error('Failed to create post');
+  const json = await res.json();
+  return normalizePost(json);
+}
+
+export async function updatePost(id: string, data: { title: string; content: string; image: string; date: string }) {
+  const res = await fetch(`${API_BASE_URL}/posts/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error('Failed to update post');
+  const json = await res.json();
+  return normalizePost(json);
+}
+
+export async function deletePost(id: string) {
+  const res = await fetch(`${API_BASE_URL}/posts/${id}`, {
+    method: 'DELETE',
+  });
+  if (!res.ok) throw new Error('Failed to delete post');
+  return res.json();
+}
+
+export async function fetchNews() {
+  const res = await fetch(`${API_BASE_URL}/news`);
+  if (!res.ok) throw new Error('Failed to fetch news');
+  return res.json();
+}
+
+export async function createNews(data: { title: string; content: string; image?: string; author?: string; category?: string; date: string }) {
+  const res = await fetch(`${API_BASE_URL}/news`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error('Failed to create news');
+  return res.json();
+}
+
+export async function updateNews(id: string, data: { title: string; content: string; image?: string; author?: string; category?: string; date: string }) {
+  const res = await fetch(`${API_BASE_URL}/news/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error('Failed to update news');
+  return res.json();
+}
+
+export async function deleteNews(id: string) {
+  const res = await fetch(`${API_BASE_URL}/news/${id}`, {
+    method: 'DELETE',
+  });
+  if (!res.ok) throw new Error('Failed to delete news');
+  return res.json();
+}

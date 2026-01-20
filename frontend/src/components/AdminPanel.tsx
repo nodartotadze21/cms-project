@@ -6,7 +6,7 @@ interface AdminPanelProps {
   posts: Post[];
   onNewPost: () => void;
   onEditPost: (post: Post) => void;
-  onDeletePost: (id: number) => void;
+  onDeletePost: (id: string) => void;
 }
 
 export const AdminPanel: React.FC<AdminPanelProps> = ({

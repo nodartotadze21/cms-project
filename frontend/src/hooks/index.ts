@@ -36,7 +36,7 @@ export const usePosts = () => {
     saveData(updatedPosts);
   }, [posts, saveData]);
 
-  const deletePost = useCallback((id: number) => {
+  const deletePost = useCallback((id: string) => {
     const updatedPosts = posts.filter(p => p.id !== id);
     saveData(updatedPosts);
   }, [posts, saveData]);
