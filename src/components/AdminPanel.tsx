@@ -1,6 +1,6 @@
 import React from 'react';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
-import { Post } from '../../types';
+import { Post } from '../types';
 
 interface AdminPanelProps {
   posts: Post[];
