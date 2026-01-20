@@ -11,6 +11,20 @@ function normalizePost(doc: any) {
   };
 }
 
+function normalizeNews(doc: any) {
+  return {
+    id: (doc.id ?? doc._id)?.toString(),
+    title: doc.title,
+    content: doc.content,
+    image: doc.image ?? '',
+    author: doc.author ?? 'Admin',
+    category: doc.category ?? 'General',
+    date: doc.date,
+    published: Boolean(doc.published),
+    createdAt: (doc.createdAt ?? new Date().toISOString()).toString(),
+  };
+}
+
 export async function fetchPosts() {
   const res = await fetch(`${API_BASE_URL}/posts`);
   if (!res.ok) throw new Error('Failed to fetch posts');
@@ -51,7 +65,8 @@ export async function deletePost(id: string) {
 export async function fetchNews() {
   const res = await fetch(`${API_BASE_URL}/news`);
   if (!res.ok) throw new Error('Failed to fetch news');
-  return res.json();
+  const data = await res.json();
+  return Array.isArray(data) ? data.map(normalizeNews) : [];
 }
 
 export async function createNews(data: { title: string; content: string; image?: string; author?: string; category?: string; date: string }) {
@@ -61,17 +76,19 @@ export async function createNews(data: { title: string; content: string; image?:
     body: JSON.stringify(data),
   });
   if (!res.ok) throw new Error('Failed to create news');
-  return res.json();
+  const json = await res.json();
+  return normalizeNews(json);
 }
 
-export async function updateNews(id: string, data: { title: string; content: string; image?: string; author?: string; category?: string; date: string }) {
+export async function updateNews(id: string, data: { title: string; content: string; image?: string; author?: string; category?: string; date: string; published?: boolean }) {
   const res = await fetch(`${API_BASE_URL}/news/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
   if (!res.ok) throw new Error('Failed to update news');
-  return res.json();
+  const json = await res.json();
+  return normalizeNews(json);
 }
 
 export async function deleteNews(id: string) {

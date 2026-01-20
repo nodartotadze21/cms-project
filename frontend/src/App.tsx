@@ -10,7 +10,7 @@ import { LoginModal } from './components/modals/LoginModal';
 import { PostFormModal } from './components/modals/PostFormModal';
 import { storage } from './utils/storage';
 import { DEFAULT_ADMIN_PASSWORD, STORAGE_KEYS } from './utils/constants';
-import { Post, FormData } from './types';
+import { Post, FormData, NewsItem } from './types';
 import * as api from './utils/api';
 
 const App: React.FC = () => {
@@ -28,6 +28,7 @@ const App: React.FC = () => {
     date: new Date().toISOString().split('T')[0]
   });
   const [loading, setLoading] = useState(true);
+  const [news, setNews] = useState<NewsItem[]>([]);
 
   // Load posts and admin status from storage
   useEffect(() => {
@@ -39,10 +40,14 @@ const App: React.FC = () => {
     try {
       // Try loading from API first
       try {
-        const posts = await api.fetchPosts();
-        setPosts(posts);
+        const [postsFromApi, newsFromApi] = await Promise.all([
+          api.fetchPosts(),
+          api.fetchNews(),
+        ]);
+        setPosts(postsFromApi);
+        setNews(newsFromApi);
       } catch (error) {
-        // Fallback to localStorage
+        // Fallback to localStorage for posts
         console.log('API unavailable, loading from localStorage');
         const postsResult = await storage.get(STORAGE_KEYS.POSTS);
         if (postsResult) {
@@ -156,6 +161,26 @@ const App: React.FC = () => {
     }
   };
 
+  const handleTogglePublish = async (id: string) => {
+    try {
+      const item = news.find(n => n.id === id);
+      if (!item) return;
+      const updated = await api.updateNews(id, {
+        title: item.title,
+        content: item.content,
+        image: item.image,
+        author: item.author,
+        category: item.category,
+        date: item.date,
+        published: !item.published,
+      });
+      setNews(prev => prev.map(n => (n.id === id ? updated : n)));
+    } catch (error) {
+      console.error('Error toggling publish:', error);
+      alert('Failed to update publish state.');
+    }
+  };
+
   const handleEditPost = (post: Post) => {
     setEditingPost(post);
     setFormData({
@@ -189,7 +214,7 @@ const App: React.FC = () => {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {currentPage === 'main' && <MainPage onNewsClick={() => setCurrentPage('news')} />}
-        {currentPage === 'news' && <NewsPage posts={posts} />}
+        {currentPage === 'news' && <NewsPage news={news} isAdmin={isAdmin} onTogglePublish={handleTogglePublish} />}
         {currentPage === 'about' && <AboutPage />}
         {currentPage === 'contact' && <ContactPage />}
         {currentPage === 'admin' && isAdmin && (
