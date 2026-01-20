@@ -8,9 +8,10 @@ import { AdminPanel } from './components/AdminPanel';
 import { Footer } from './components/Footer';
 import { LoginModal } from './components/modals/LoginModal';
 import { PostFormModal } from './components/modals/PostFormModal';
+import { NewsFormModal } from './components/modals/NewsFormModal';
 import { storage } from './utils/storage';
 import { DEFAULT_ADMIN_PASSWORD, STORAGE_KEYS } from './utils/constants';
-import { Post, FormData, NewsItem } from './types';
+import { Post, FormData, NewsItem, NewsFormData } from './types';
 import * as api from './utils/api';
 
 const App: React.FC = () => {
@@ -29,6 +30,17 @@ const App: React.FC = () => {
   });
   const [loading, setLoading] = useState(true);
   const [news, setNews] = useState<NewsItem[]>([]);
+  const [showNewsForm, setShowNewsForm] = useState(false);
+  const [editingNews, setEditingNews] = useState<NewsItem | null>(null);
+  const [newsForm, setNewsForm] = useState<NewsFormData>({
+    title: '',
+    content: '',
+    image: '',
+    author: 'Admin',
+    category: 'General',
+    date: new Date().toISOString().split('T')[0],
+    published: true,
+  });
 
   // Load posts and admin status from storage
   useEffect(() => {
@@ -226,6 +238,43 @@ const App: React.FC = () => {
             }}
             onEditPost={handleEditPost}
             onDeletePost={handleDeletePost}
+            news={news}
+            onNewNews={() => {
+              setShowNewsForm(true);
+              setEditingNews(null);
+              setNewsForm({
+                title: '',
+                content: '',
+                image: '',
+                author: 'Admin',
+                category: 'General',
+                date: new Date().toISOString().split('T')[0],
+                published: true,
+              });
+            }}
+            onEditNews={(item) => {
+              setEditingNews(item);
+              setNewsForm({
+                title: item.title,
+                content: item.content,
+                image: item.image,
+                author: item.author,
+                category: item.category,
+                date: item.date,
+                published: item.published,
+              });
+              setShowNewsForm(true);
+            }}
+            onDeleteNews={async (id) => {
+              if (window.confirm('Delete this news item?')) {
+                try {
+                  await api.deleteNews(id);
+                  setNews(prev => prev.filter(n => n.id !== id));
+                } catch (e) {
+                  alert('Failed to delete news.');
+                }
+              }
+            }}
           />
         )}
       </main>
@@ -250,6 +299,52 @@ const App: React.FC = () => {
         onClose={() => {
           setShowPostForm(false);
           setEditingPost(null);
+        }}
+      />
+
+      <NewsFormModal
+        isOpen={showNewsForm}
+        editingNews={editingNews}
+        formData={newsForm}
+        onFormChange={setNewsForm}
+        onSubmit={async () => {
+          if (!newsForm.title || !newsForm.content) {
+            alert('Please fill in required fields');
+            return;
+          }
+          try {
+            if (editingNews) {
+              const updated = await api.updateNews(editingNews.id, {
+                title: newsForm.title,
+                content: newsForm.content,
+                image: newsForm.image,
+                author: newsForm.author,
+                category: newsForm.category,
+                date: newsForm.date,
+                published: newsForm.published,
+              });
+              setNews(prev => prev.map(n => (n.id === editingNews.id ? updated : n)));
+            } else {
+              const created = await api.createNews({
+                title: newsForm.title,
+                content: newsForm.content,
+                image: newsForm.image,
+                author: newsForm.author,
+                category: newsForm.category,
+                date: newsForm.date,
+              });
+              setNews(prev => [created, ...prev]);
+            }
+            setShowNewsForm(false);
+            setEditingNews(null);
+          } catch (e) {
+            console.error(e);
+            alert('Failed to save news item');
+          }
+        }}
+        onClose={() => {
+          setShowNewsForm(false);
+          setEditingNews(null);
         }}
       />
 

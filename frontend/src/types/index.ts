@@ -19,6 +19,16 @@ export interface NewsItem {
   createdAt: string;
 }
 
+export interface NewsFormData {
+  title: string;
+  content: string;
+  image: string;
+  author: string;
+  category: string;
+  date: string;
+  published: boolean;
+}
+
 export interface FormData {
   title: string;
   content: string;
