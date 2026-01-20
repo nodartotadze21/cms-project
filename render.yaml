@@ -1,0 +1,12 @@
+services:
+  - type: static
+    name: cms-frontend
+    rootDir: frontend
+    buildCommand: npm run build
+    staticPublishPath: dist
+  - type: web
+    name: cms-backend
+    rootDir: backend
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm run start

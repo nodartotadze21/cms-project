@@ -1,144 +1,101 @@
 # Fullstack CMS
 
-A modern, responsive content management system built with React, TypeScript, and Tailwind CSS.
-
-## Features
-
-- **Public Pages**: Home, News, About, and Contact pages
-- **Admin Panel**: Create, read, update, and delete blog posts
-- **Authentication**: Admin login with password protection
-- **Responsive Design**: Mobile-friendly interface
-- **Local Storage**: Persistent data storage (with support for custom storage APIs)
-- **Modern UI**: Clean, professional design using Tailwind CSS
+A modern, responsive CMS built with React, TypeScript, and Tailwind CSS.
 
 ## Project Structure
 
 ```
 cms-project/
-├── src/
-│   ├── components/
-│   │   ├── pages/
-│   │   │   ├── MainPage.tsx
-│   │   │   ├── NewsPage.tsx
-│   │   │   ├── AboutPage.tsx
-│   │   │   └── ContactPage.tsx
-│   │   ├── modals/
-│   │   │   ├── LoginModal.tsx
-│   │   │   └── PostFormModal.tsx
-│   │   ├── Navigation.tsx
-│   │   ├── AdminPanel.tsx
-│   │   └── Footer.tsx
-│   ├── hooks/
-│   │   └── index.ts (usePosts, useAdminSession)
-│   ├── utils/
-│   │   ├── storage.ts
-│   │   └── constants.ts
-│   ├── types/
-│   │   └── index.ts
-│   ├── App.tsx
-│   ├── index.tsx
-│   └── index.css
-├── public/
-├── index.html
-├── package.json
-├── tsconfig.json
-├── vite.config.ts
-├── tailwind.config.js
-├── postcss.config.js
-└── eslint.config.js
+├── frontend/
+│   ├── src/ (components, pages, modals, hooks, utils, types)
+│   ├── public/
+│   ├── index.html
+│   ├── package.json
+│   ├── tsconfig*.json
+│   ├── vite.config.ts
+│   ├── tailwind.config.js
+│   └── postcss.config.js
+├── backend/
+│   ├── src/index.ts (Express API entry)
+│   ├── package.json
+│   └── tsconfig.json
+├── vercel.json        (build/install commands for Vercel)
+├── render.yaml        (Render static site + backend service)
+├── .gitignore
+└── README.md
 ```
 
-## Installation
+## Frontend (Vite)
 
-1. Navigate to the project directory:
+1) Change into the app folder
 ```bash
-cd cms-project
+cd frontend
 ```
 
-2. Install dependencies:
+2) Install deps
 ```bash
 npm install
 ```
 
-## Development
-
-Start the development server:
+3) Dev server
 ```bash
 npm run dev
 ```
+App runs at `http://localhost:3000`.
 
-The app will open in your browser at `http://localhost:3000`
+## Build & Preview
 
-## Building
-
-Build for production:
 ```bash
+cd frontend
 npm run build
-```
-
-Preview the production build:
-```bash
 npm run preview
 ```
 
-## Usage
+## Backend (Express)
 
-### Admin Panel Access
+1) Install deps
+```bash
+cd backend
+npm install
+```
 
-1. Click the "Admin" button in the top navigation
-2. Enter the default password: `admin123`
-3. Once authenticated, you'll have access to the Admin Panel
+2) Dev server
+```bash
+npm run dev
+```
+Runs on port 4000 by default; health check at `/health`.
 
-### Managing Posts
+3) Build & start
+```bash
+npm run build
+npm run start
+```
 
-- **Create Post**: Click "New Post" button in the Admin Panel
-- **Edit Post**: Click the edit icon next to any post
-- **Delete Post**: Click the trash icon to delete a post
+## Deployment
 
-## Default Credentials
+- **Vercel** (frontend): `vercel.json` installs/builds in `frontend` and serves `frontend/dist`. In the dashboard, set Root Directory to `frontend`, Build Command `npm run build`, Output Directory `dist`.
+- **Vercel** (backend): not configured here; deploy separately as serverless functions or another hosted service.
+- **Render (frontend static)**: `render.yaml` uses `rootDir: frontend`, `buildCommand: npm run build`, `staticPublishPath: dist`.
+- **Render (backend web service)**: `render.yaml` includes a `web` service at `rootDir: backend` with `npm run build` and `npm run start`.
 
-- **Admin Password**: `admin123`
+## Admin Panel Usage
 
-## Technologies Used
-
-- **React 18**: UI library
-- **TypeScript**: Type-safe JavaScript
-- **Tailwind CSS**: Utility-first CSS framework
-- **Vite**: Fast build tool and dev server
-- **Lucide React**: Icon library
-- **LocalStorage API**: Data persistence
-
-## Storage
-
-The CMS stores data in browser's localStorage:
-- `cms-posts`: Array of blog posts
-- `cms-admin-session`: Admin session status
-- `cms-admin-password`: Custom admin password (optional)
+- Default admin password: `admin123`
+- Access Admin via the navigation; once logged in you can create, edit, and delete posts.
 
 ## Customization
 
-### Change Admin Password
+- Change admin password: update `DEFAULT_ADMIN_PASSWORD` in `frontend/src/utils/constants.ts`.
+- Rename the site: edit the heading in `frontend/src/components/Navigation.tsx`.
+- Tailwind theme: adjust `frontend/tailwind.config.js`.
 
-Update the `DEFAULT_ADMIN_PASSWORD` in `src/utils/constants.ts`:
-```typescript
-export const DEFAULT_ADMIN_PASSWORD = 'your-new-password';
-```
+## Storage
 
-### Customize Site Name
-
-Update the site name in `src/components/Navigation.tsx`:
-```typescript
-<h1 className="text-xl sm:text-2xl font-bold">Your Site Name</h1>
-```
-
-### Modify Tailwind Theme
-
-Edit `tailwind.config.js` to customize colors, fonts, and spacing.
+Data persists in `localStorage`:
+- `cms-posts`: posts array
+- `cms-admin-session`: admin session flag
+- `cms-admin-password`: custom password (optional)
 
 ## License
 
 MIT
-
-## Support
-
-For issues or questions, please create an issue in the repository.
