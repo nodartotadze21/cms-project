@@ -73,6 +73,10 @@ npm run start
 
 ## Deployment
 
+**Live URLs**:
+- Frontend (Vercel): [https://cms-project-opal.vercel.app/](https://cms-project-opal.vercel.app/)
+- Backend (Render): [https://cms-project-mh3w.onrender.com/](https://cms-project-mh3w.onrender.com/)
+
 - **Vercel** (frontend): `vercel.json` installs/builds in `frontend` and serves `frontend/dist`. In the dashboard, set Root Directory to `frontend`, Build Command `npm run build`, Output Directory `dist`.
 - **Vercel** (backend): not configured here; deploy separately as serverless functions or another hosted service.
 - **Render (frontend static)**: `render.yaml` uses `rootDir: frontend`, `buildCommand: npm run build`, `staticPublishPath: dist`.
