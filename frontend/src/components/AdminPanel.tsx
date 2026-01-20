@@ -26,12 +26,12 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">
-        <h2 className="text-4xl font-bold text-gray-800">Admin Panel</h2>
+        <h2 className="text-4xl font-bold text-gray-800">ადმინისტრატორის პანელი</h2>
         <button
           onClick={onNewPost}
           className="bg-blue-600 text-white px-6 py-3 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition"
         >
-          <Plus size={20} /> New Post
+          <Plus size={20} /> ახალი პოსტი
         </button>
       </div>
 
@@ -40,16 +40,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden sm:table-cell">Date</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">სათაური</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden sm:table-cell">თარიღი</th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">მოქმედებები</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
               {posts.length === 0 ? (
                 <tr>
                   <td colSpan={3} className="px-6 py-8 text-center text-gray-500">
-                    No posts yet
+                    პოსტები ჯერ არ არის
                   </td>
                 </tr>
               ) : (
@@ -86,13 +86,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
         </div>
       </div>
       <div className="flex justify-between items-center mt-12">
-        <h3 className="text-2xl font-bold text-gray-800">News</h3>
+        <h3 className="text-2xl font-bold text-gray-800">სიახლეები</h3>
         {onNewNews && (
           <button
             onClick={onNewNews}
             className="bg-green-600 text-white px-6 py-2 rounded-lg flex items-center gap-2 hover:bg-green-700 transition"
           >
-            <Plus size={18} /> New News
+            <Plus size={18} /> ახალი სიახლე
           </button>
         )}
       </div>
@@ -101,16 +101,16 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden sm:table-cell">Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden md:table-cell">Status</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">სათაური</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden sm:table-cell">თარიღი</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase hidden md:table-cell">სტატუსი</th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">მოქმედებები</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
               {news.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-8 text-center text-gray-500">No news yet</td>
+                  <td colSpan={4} className="px-6 py-8 text-center text-gray-500">სიახლეები ჯერ არ არის</td>
                 </tr>
               ) : (
                 news.map(item => (
@@ -118,14 +118,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
                     <td className="px-6 py-4">
                       <div className="font-medium text-gray-900">{item.title}</div>
                       <div className="text-sm text-gray-500 sm:hidden">
-                        {new Date(item.date).toLocaleDateString()}
+                        {new Date(item.date).toLocaleDateString('ka-GE')}
                       </div>
                     </td>
                     <td className="px-6 py-4 text-gray-500 hidden sm:table-cell">
-                      {new Date(item.date).toLocaleDateString()}
+                      {new Date(item.date).toLocaleDateString('ka-GE')}
                     </td>
                     <td className="px-6 py-4 text-gray-500 hidden md:table-cell">
-                      {item.published ? 'Published' : 'Unpublished'}
+                      {item.published ? 'გამოქვეყნებული' : 'გამოუქვეყნებელი'}
                     </td>
                     <td className="px-6 py-4 text-right space-x-2">
                       {onEditNews && (

@@ -4,6 +4,7 @@ import { MainPage } from './components/pages/MainPage';
 import { NewsPage } from './components/pages/NewsPage';
 import { AboutPage } from './components/pages/AboutPage';
 import { ContactPage } from './components/pages/ContactPage';
+import { CoursesPage } from './components/pages/CoursesPage';
 import { AdminPanel } from './components/AdminPanel';
 import { Footer } from './components/Footer';
 import { LoginModal } from './components/modals/LoginModal';
@@ -103,7 +104,7 @@ const App: React.FC = () => {
         console.error('Error saving session:', error);
       }
     } else {
-      alert('Incorrect password');
+      alert('არასწორი პაროლი');
     }
   };
 
@@ -119,7 +120,7 @@ const App: React.FC = () => {
 
   const handleSubmitPost = async () => {
     if (!formData.title || !formData.content) {
-      alert('Please fill in all required fields');
+      alert('გთხოვთ შეატანეთ ყველა სავალდებულო ველი');
       return;
     }
 
@@ -156,19 +157,19 @@ const App: React.FC = () => {
       });
     } catch (error) {
       console.error('Error saving post:', error);
-      alert('Failed to save post. Please try again.');
+      alert('პოსტის შენახვა ვერ მოხერხდა. გთხოვთ სცადოთ თავიდან.');
     }
   };
 
   const handleDeletePost = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this post?')) {
+    if (window.confirm('დარწმუნებული ხართ რომ გსურთ ამ პოსტის წაშლა?')) {
       try {
         await api.deletePost(id);
         const updatedPosts = posts.filter(p => p.id !== id);
         await saveData(updatedPosts);
       } catch (error) {
         console.error('Error deleting post:', error);
-        alert('Failed to delete post. Please try again.');
+        alert('პოსტის წაშლა ვერ მოხერხდა. გთხოვთ სცადოთ თავიდან.');
       }
     }
   };
@@ -189,7 +190,7 @@ const App: React.FC = () => {
       setNews(prev => prev.map(n => (n.id === id ? updated : n)));
     } catch (error) {
       console.error('Error toggling publish:', error);
-      alert('Failed to update publish state.');
+      alert('სტატუსის განახლება ვერ მოხერხდა.');
     }
   };
 
@@ -225,8 +226,17 @@ const App: React.FC = () => {
       />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {currentPage === 'main' && <MainPage onNewsClick={() => setCurrentPage('news')} />}
+        {currentPage === 'main' && (
+          <MainPage 
+            onNewsClick={() => setCurrentPage('news')} 
+            onCoursesClick={(category) => setCurrentPage(category)}
+          />
+        )}
         {currentPage === 'news' && <NewsPage news={news} isAdmin={isAdmin} onTogglePublish={handleTogglePublish} />}
+        {(currentPage === 'courses-entrance-exam' || 
+          currentPage === 'courses-languages' || 
+          currentPage === 'courses-programming' || 
+          currentPage === 'courses-other') && <CoursesPage />}
         {currentPage === 'about' && <AboutPage />}
         {currentPage === 'contact' && <ContactPage />}
         {currentPage === 'admin' && isAdmin && (
@@ -266,12 +276,12 @@ const App: React.FC = () => {
               setShowNewsForm(true);
             }}
             onDeleteNews={async (id) => {
-              if (window.confirm('Delete this news item?')) {
+              if (window.confirm('დარწმუნებული ხართ რომ გსურთ ამ სიახლის წაშლა?')) {
                 try {
                   await api.deleteNews(id);
                   setNews(prev => prev.filter(n => n.id !== id));
                 } catch (e) {
-                  alert('Failed to delete news.');
+                  alert('სიახლის წაშლა ვერ მოხერხდა.');
                 }
               }
             }}
@@ -309,7 +319,7 @@ const App: React.FC = () => {
         onFormChange={setNewsForm}
         onSubmit={async () => {
           if (!newsForm.title || !newsForm.content) {
-            alert('Please fill in required fields');
+            alert('გთხოვთ შეატანეთ ყველა სავალდებულო ველი');
             return;
           }
           try {
@@ -339,7 +349,7 @@ const App: React.FC = () => {
             setEditingNews(null);
           } catch (e) {
             console.error(e);
-            alert('Failed to save news item');
+            alert('სიახლის შენახვა ვერ მოხერხდა');
           }
         }}
         onClose={() => {

@@ -25,24 +25,24 @@ export const PostFormModal: React.FC<PostFormModalProps> = ({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
       <div className="bg-white rounded-lg p-8 max-w-2xl w-full my-8">
         <div className="flex justify-between items-center mb-6">
-          <h3 className="text-2xl font-bold">{editingPost ? 'Edit Post' : 'Create New Post'}</h3>
+          <h3 className="text-2xl font-bold">{editingPost ? 'პოსტის რედაქტირება' : 'ახალი პოსტის შექმნა'}</h3>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
             <X size={24} />
           </button>
         </div>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Title *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">სათაური *</label>
             <input
               type="text"
               value={formData.title}
               onChange={(e) => onFormChange({ ...formData, title: e.target.value })}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Enter post title"
+              placeholder="შეიყვანეთ სათაური"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Date</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">თარიღი</label>
             <input
               type="date"
               value={formData.date}
@@ -51,7 +51,7 @@ export const PostFormModal: React.FC<PostFormModalProps> = ({
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Image URL (optional)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">სურათის URL (არასავალდებულო)</label>
             <input
               type="url"
               value={formData.image}
@@ -61,13 +61,13 @@ export const PostFormModal: React.FC<PostFormModalProps> = ({
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Content *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">ტექსტი *</label>
             <textarea
               value={formData.content}
               onChange={(e) => onFormChange({ ...formData, content: e.target.value })}
               rows={8}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Enter post content"
+              placeholder="შეიყვანეთ ტექსტი"
             />
           </div>
           <div className="flex gap-4">
@@ -75,13 +75,13 @@ export const PostFormModal: React.FC<PostFormModalProps> = ({
               onClick={onSubmit}
               className="flex-1 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
             >
-              {editingPost ? 'Update Post' : 'Create Post'}
+              {editingPost ? 'განახლება' : 'შექმნა'}
             </button>
             <button
               onClick={onClose}
               className="flex-1 bg-gray-200 text-gray-800 py-3 rounded-lg font-semibold hover:bg-gray-300 transition"
             >
-              Cancel
+              გაუქმება
             </button>
           </div>
         </div>
