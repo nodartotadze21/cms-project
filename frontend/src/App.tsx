@@ -134,7 +134,13 @@ const App: React.FC = () => {
       
       // თუ ატვირთულია ახალი სურათი, ჯერ ავტვირთოთ Cloudinary-ზე
       if (imageFile) {
-        imageUrl = await api.uploadImage(imageFile);
+        try {
+          imageUrl = await api.uploadImage(imageFile);
+        } catch (uploadError) {
+          console.error('სურათის ატვირთვის შეცდომა:', uploadError);
+          alert('სურათის ატვირთვა ვერ მოხერხდა. სცადეთ თავიდან.');
+          return;
+        }
       }
 
       let updatedPost: Post;
@@ -362,7 +368,13 @@ const App: React.FC = () => {
             
             // თუ ატვირთულია ახალი სურათი, ჯერ ავტვირთოთ Cloudinary-ზე
             if (imageFile) {
-              imageUrl = await api.uploadImage(imageFile);
+              try {
+                imageUrl = await api.uploadImage(imageFile);
+              } catch (uploadError) {
+                console.error('სურათის ატვირთვის შეცდომა:', uploadError);
+                alert('სურათის ატვირთვა ვერ მოხერხდა. სცადეთ თავიდან.');
+                return;
+              }
             }
 
             if (editingNews) {
@@ -389,9 +401,18 @@ const App: React.FC = () => {
             }
             setShowNewsForm(false);
             setEditingNews(null);
+            setNewsForm({
+              title: '',
+              content: '',
+              image: '',
+              author: 'ადმინი',
+              category: 'ზოგადი',
+              date: new Date().toISOString().split('T')[0],
+              published: true,
+            });
           } catch (e) {
-            console.error(e);
-            alert('სიახლის შენახვა ვერ მოხერხდა');
+            console.error('სიახლის შენახვის შეცდომა:', e);
+            alert('სიახლის შენახვა ვერ მოხერხდა. სცადეთ თავიდან.');
           }
         }}
         onClose={() => {
