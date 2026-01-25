@@ -44,9 +44,16 @@ export const Navigation: React.FC<NavigationProps> = ({
     <nav className="bg-gradient-to-r from-blue-900 to-purple-900 text-white shadow-lg sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex items-center">
-            <h1 className="text-xl sm:text-2xl font-bold">საგანმანათლებლო ცენტრი</h1>
-          </div>
+          <button
+            onClick={() => setCurrentPage('main')}
+            className="flex items-center hover:opacity-80 transition"
+          >
+            <img
+              src="/logo.png"
+              alt="საგანმანათლებლო ცენტრი"
+              className="h-12 w-auto"
+            />
+          </button>
 
           <div className="hidden md:flex space-x-1 items-center">
             <NavButton page="main" label="მთავარი" />
