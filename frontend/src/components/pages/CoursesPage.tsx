@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { BookOpen, Globe, Code, GraduationCap } from 'lucide-react';
+import { RegistrationModal } from '../modals/RegistrationModal';
 
 interface Course {
   id: string;
@@ -20,6 +21,7 @@ interface CourseCategory {
 
 export const CoursesPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('entrance-exam');
+  const [showRegistration, setShowRegistration] = useState(false);
 
   const categories: CourseCategory[] = [
     {
@@ -226,6 +228,15 @@ export const CoursesPage: React.FC = () => {
 
   const currentCategory = categories.find(cat => cat.id === selectedCategory) || categories[0];
 
+  // Flatten all courses for registration modal
+  const allCourses = categories.flatMap(cat => 
+    cat.courses.map(course => ({
+      id: course.id,
+      title: course.title,
+      category: cat.title
+    }))
+  );
+
   return (
     <div className="space-y-8">
       <div className="text-center">
@@ -296,10 +307,19 @@ export const CoursesPage: React.FC = () => {
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl p-8 text-center">
         <h3 className="text-3xl font-bold mb-4">მზად ხართ სწავლის დაწყებისთვის?</h3>
         <p className="text-xl mb-6">დარეგისტრირდით და დაიწყეთ თქვენი საგანმანათლებლო მოგზაურობა დღესვე!</p>
-        <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all transform hover:scale-105">
+        <button 
+          onClick={() => setShowRegistration(true)}
+          className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all transform hover:scale-105"
+        >
           რეგისტრაცია
         </button>
       </div>
+
+      <RegistrationModal
+        isOpen={showRegistration}
+        onClose={() => setShowRegistration(false)}
+        allCourses={allCourses}
+      />
     </div>
   );
 };
