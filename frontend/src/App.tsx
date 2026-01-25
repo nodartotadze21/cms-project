@@ -123,20 +123,27 @@ const App: React.FC = () => {
     }
   };
 
-  const handleSubmitPost = async () => {
+  const handleSubmitPost = async (imageFile?: File) => {
     if (!formData.title || !formData.content) {
       alert('გთხოვთ შეატანეთ ყველა სავალდებულო ველი');
       return;
     }
 
     try {
+      let imageUrl = formData.image || '';
+      
+      // თუ ატვირთულია ახალი სურათი, ჯერ ავტვირთოთ Cloudinary-ზე
+      if (imageFile) {
+        imageUrl = await api.uploadImage(imageFile);
+      }
+
       let updatedPost: Post;
       if (editingPost) {
         // Update existing post
         updatedPost = await api.updatePost(editingPost.id.toString(), {
           title: formData.title,
           content: formData.content,
-          image: formData.image || '',
+          image: imageUrl,
           date: formData.date
         });
         const updatedPosts = posts.map(p => (p.id === editingPost.id ? updatedPost : p));
@@ -146,7 +153,7 @@ const App: React.FC = () => {
         updatedPost = await api.createPost({
           title: formData.title,
           content: formData.content,
-          image: formData.image || '',
+          image: imageUrl,
           date: formData.date
         });
         await saveData([updatedPost, ...posts]);
@@ -345,17 +352,24 @@ const App: React.FC = () => {
         editingNews={editingNews}
         formData={newsForm}
         onFormChange={setNewsForm}
-        onSubmit={async () => {
+        onSubmit={async (imageFile?: File) => {
           if (!newsForm.title || !newsForm.content) {
             alert('გთხოვთ შეატანეთ ყველა სავალდებულო ველი');
             return;
           }
           try {
+            let imageUrl = newsForm.image || '';
+            
+            // თუ ატვირთულია ახალი სურათი, ჯერ ავტვირთოთ Cloudinary-ზე
+            if (imageFile) {
+              imageUrl = await api.uploadImage(imageFile);
+            }
+
             if (editingNews) {
               const updated = await api.updateNews(editingNews.id, {
                 title: newsForm.title,
                 content: newsForm.content,
-                image: newsForm.image,
+                image: imageUrl,
                 author: newsForm.author,
                 category: newsForm.category,
                 date: newsForm.date,
@@ -366,7 +380,7 @@ const App: React.FC = () => {
               const created = await api.createNews({
                 title: newsForm.title,
                 content: newsForm.content,
-                image: newsForm.image,
+                image: imageUrl,
                 author: newsForm.author,
                 category: newsForm.category,
                 date: newsForm.date,

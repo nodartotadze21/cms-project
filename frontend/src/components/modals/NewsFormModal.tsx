@@ -1,5 +1,5 @@
-import React from 'react';
-import { X } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, Upload } from 'lucide-react';
 import { NewsFormData, NewsItem } from '../../types';
 
 interface NewsFormModalProps {
@@ -7,7 +7,7 @@ interface NewsFormModalProps {
   editingNews: NewsItem | null;
   formData: NewsFormData;
   onFormChange: (data: NewsFormData) => void;
-  onSubmit: () => void;
+  onSubmit: (imageFile?: File) => void;
   onClose: () => void;
 }
 
@@ -19,6 +19,21 @@ export const NewsFormModal: React.FC<NewsFormModalProps> = ({
   onSubmit,
   onClose
 }) => {
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>(formData.image || '');
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -83,14 +98,32 @@ export const NewsFormModal: React.FC<NewsFormModalProps> = ({
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">სურათის URL (არასავალდებულო)</label>
-            <input
-              type="url"
-              value={formData.image}
-              onChange={(e) => onFormChange({ ...formData, image: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="https://magalitad.ge/surati.jpg"
-            />
+            <label className="block text-sm font-medium text-gray-700 mb-2">სურათი (არასავალდებულო)</label>
+            <div className="flex items-center gap-4">
+              <label className="flex-1 cursor-pointer">
+                <div className="flex items-center gap-2 px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 transition">
+                  <Upload size={20} className="text-gray-500" />
+                  <span className="text-gray-600">
+                    {imageFile ? imageFile.name : 'აირჩიეთ სურათი...'}
+                  </span>
+                </div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+              </label>
+            </div>
+            {(imagePreview || formData.image) && (
+              <div className="mt-3">
+                <img
+                  src={imagePreview || formData.image}
+                  alt="Preview"
+                  className="w-full h-48 object-cover rounded-lg"
+                />
+              </div>
+            )}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">ტექსტი *</label>
@@ -104,7 +137,7 @@ export const NewsFormModal: React.FC<NewsFormModalProps> = ({
           </div>
           <div className="flex gap-4">
             <button
-              onClick={onSubmit}
+              onClick={() => onSubmit(imageFile || undefined)}
               className="flex-1 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
             >
               {editingNews ? 'განახლება' : 'შექმნა'}

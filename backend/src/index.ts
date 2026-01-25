@@ -4,6 +4,7 @@ import cors from 'cors';
 import { connectDB } from './db.js';
 import postRoutes from './routes/posts.js';
 import newsRoutes from './routes/news.js';
+import uploadRoutes from './routes/upload.js';
 
 const app = express();
 app.use(cors());
@@ -19,6 +20,7 @@ app.get('/', (_req, res) => {
 
 app.use('/api', postRoutes);
 app.use('/api', newsRoutes);
+app.use('/api/upload', uploadRoutes);
 
 const PORT = Number(process.env.PORT || 4000);
 

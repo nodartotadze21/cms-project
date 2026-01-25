@@ -1,5 +1,23 @@
 const API_BASE_URL = ((import.meta as any).env?.VITE_API_URL as string) || 'http://localhost:4000/api';
 
+// სურათის ატვირთვის ფუნქცია
+export async function uploadImage(file: File): Promise<string> {
+  const formData = new FormData();
+  formData.append('image', file);
+
+  const res = await fetch(`${API_BASE_URL}/upload`, {
+    method: 'POST',
+    body: formData,
+  });
+
+  if (!res.ok) {
+    throw new Error('სურათის ატვირთვა ვერ მოხერხდა');
+  }
+
+  const data = await res.json();
+  return data.url;
+}
+
 function normalizePost(doc: any) {
   return {
     id: (doc.id ?? doc._id)?.toString(),
