@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, Globe, Code, GraduationCap, Award, Users } from 'lucide-react';
+import { BookOpen, Globe, Code, GraduationCap, Award, Users, Calculator, Zap, FlaskConical, Leaf, BookText, Clock } from 'lucide-react';
 
 interface MainPageProps {
   onNewsClick: () => void;

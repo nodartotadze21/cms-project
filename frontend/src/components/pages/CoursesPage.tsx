@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BookOpen, Globe, Code, GraduationCap } from 'lucide-react';
+import { BookOpen, Globe, Code, GraduationCap, Calculator, Zap, FlaskConical, Leaf, BookText, Clock } from 'lucide-react';
 import { RegistrationModal } from '../modals/RegistrationModal';
 
 interface Course {
@@ -36,7 +36,7 @@ export const CoursesPage: React.FC = () => {
           description: 'სრული კურსი მათემატიკაში ეროვნულ გამოცდებზე მომზადებისთვის. მოიცავს ალგებრას, გეომეტრიას და ტრიგონომეტრიას.',
           duration: '8 თვე',
           level: 'საშუალო-მაღალი',
-          icon: <BookOpen className="w-6 h-6" />
+          icon: <Calculator className="w-6 h-6" />
         },
         {
           id: 'physics',
@@ -44,7 +44,7 @@ export const CoursesPage: React.FC = () => {
           description: 'ფიზიკის ძირითადი კურსი სააბიტურიენტებისთვის. მექანიკა, თერმოდინამიკა, ელექტროსტატიკა.',
           duration: '8 თვე',
           level: 'საშუალო-მაღალი',
-          icon: <BookOpen className="w-6 h-6" />
+          icon: <Zap className="w-6 h-6" />
         },
         {
           id: 'chemistry',
@@ -52,7 +52,7 @@ export const CoursesPage: React.FC = () => {
           description: 'ქიმიის სრული კურსი: არაორგანული, ორგანული ქიმია და ქიმიური რეაქციები.',
           duration: '8 თვე',
           level: 'საშუალო-მაღალი',
-          icon: <BookOpen className="w-6 h-6" />
+          icon: <FlaskConical className="w-6 h-6" />
         },
         {
           id: 'biology',
@@ -60,7 +60,7 @@ export const CoursesPage: React.FC = () => {
           description: 'ბიოლოგიის კომპლექსური კურსი: უჯრედული ბიოლოგია, გენეტიკა, ანატომია და ეკოლოგია.',
           duration: '8 თვე',
           level: 'საშუალო',
-          icon: <BookOpen className="w-6 h-6" />
+          icon: <Leaf className="w-6 h-6" />
         },
         {
           id: 'georgian',
@@ -68,7 +68,7 @@ export const CoursesPage: React.FC = () => {
           description: 'ქართული ენის გრამატიკა და ლიტერატურის სრული კურსი გამოცდებისთვის.',
           duration: '8 თვე',
           level: 'საშუალო',
-          icon: <BookOpen className="w-6 h-6" />
+          icon: <BookText className="w-6 h-6" />
         },
         {
           id: 'history',
@@ -76,7 +76,7 @@ export const CoursesPage: React.FC = () => {
           description: 'საქართველოს და მსოფლიო ისტორიის კურსი ეროვნულ გამოცდებზე მომზადებისთვის.',
           duration: '8 თვე',
           level: 'საშუალო',
-          icon: <BookOpen className="w-6 h-6" />
+          icon: <Clock className="w-6 h-6" />
         }
       ]
     },
