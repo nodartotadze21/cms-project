@@ -1,17 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { NewsItem } from '../../types';
 import { Calendar, User } from 'lucide-react';
-import { NewsDetailModal } from '../modals/NewsDetailModal';
 
 interface NewsPageProps {
   news: NewsItem[];
   isAdmin?: boolean;
   onTogglePublish?: (id: string) => void;
+  onSelectNews?: (item: NewsItem) => void;
 }
 
-export const NewsPage: React.FC<NewsPageProps> = ({ news, isAdmin = false, onTogglePublish }) => {
-  const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
-  const [showDetail, setShowDetail] = useState(false);
+export const NewsPage: React.FC<NewsPageProps> = ({ news, isAdmin = false, onTogglePublish, onSelectNews }) => {
   return (
     <div className="space-y-8">
       <div className="text-center">
@@ -44,10 +42,7 @@ export const NewsPage: React.FC<NewsPageProps> = ({ news, isAdmin = false, onTog
                   </div>
                 </div>
                 <button
-                  onClick={() => {
-                    setSelectedNews(item);
-                    setShowDetail(true);
-                  }}
+                  onClick={() => onSelectNews?.(item)}
                   className="text-2xl sm:text-3xl font-bold mb-4 text-gray-800 hover:text-blue-600 transition text-left w-full"
                 >
                   {item.title}
@@ -55,10 +50,7 @@ export const NewsPage: React.FC<NewsPageProps> = ({ news, isAdmin = false, onTog
                 <p className="text-gray-700 whitespace-pre-wrap text-lg leading-relaxed mb-4 line-clamp-3">{item.content}</p>
                 <div className="flex gap-4">
                   <button
-                    onClick={() => {
-                      setSelectedNews(item);
-                      setShowDetail(true);
-                    }}
+                    onClick={() => onSelectNews?.(item)}
                     className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition"
                   >
                     ვრცლად
@@ -77,15 +69,6 @@ export const NewsPage: React.FC<NewsPageProps> = ({ news, isAdmin = false, onTog
           ))}
         </div>
       )}
-
-      <NewsDetailModal
-        isOpen={showDetail}
-        onClose={() => {
-          setShowDetail(false);
-          setSelectedNews(null);
-        }}
-        newsItem={selectedNews}
-      />
     </div>
   );
 };

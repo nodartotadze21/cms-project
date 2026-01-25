@@ -6,6 +6,8 @@ import { AboutPage } from './components/pages/AboutPage';
 import { ContactPage } from './components/pages/ContactPage';
 import { CoursesPage } from './components/pages/CoursesPage';
 import { BlogPage } from './components/pages/BlogPage';
+import { BlogDetailPage } from './components/pages/BlogDetailPage';
+import { NewsDetailPage } from './components/pages/NewsDetailPage';
 import { AdminPanel } from './components/AdminPanel';
 import { Footer } from './components/Footer';
 import { LoginModal } from './components/modals/LoginModal';
@@ -38,11 +40,13 @@ const App: React.FC = () => {
     title: '',
     content: '',
     image: '',
-    author: 'Admin',
-    category: 'General',
+    author: 'ადმინი',
+    category: 'ზოგადი',
     date: new Date().toISOString().split('T')[0],
     published: true,
   });
+  const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
   // Load posts and admin status from storage
   useEffect(() => {
@@ -206,6 +210,26 @@ const App: React.FC = () => {
     setShowPostForm(true);
   };
 
+  const handleSelectNews = (newsItem: NewsItem) => {
+    setSelectedNews(newsItem);
+    setCurrentPage('news-detail');
+  };
+
+  const handleSelectPost = (post: Post) => {
+    setSelectedPost(post);
+    setCurrentPage('blog-detail');
+  };
+
+  const handleBackFromNewsDetail = () => {
+    setSelectedNews(null);
+    setCurrentPage('news');
+  };
+
+  const handleBackFromBlogDetail = () => {
+    setSelectedPost(null);
+    setCurrentPage('blog');
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -233,8 +257,10 @@ const App: React.FC = () => {
             onCoursesClick={(category) => setCurrentPage(category)}
           />
         )}
-        {currentPage === 'news' && <NewsPage news={news} isAdmin={isAdmin} onTogglePublish={handleTogglePublish} />}
-        {currentPage === 'blog' && <BlogPage posts={posts} />}
+        {currentPage === 'news' && <NewsPage news={news} isAdmin={isAdmin} onTogglePublish={handleTogglePublish} onSelectNews={handleSelectNews} />}
+        {currentPage === 'blog' && <BlogPage posts={posts} onSelectPost={handleSelectPost} />}
+        {currentPage === 'news-detail' && selectedNews && <NewsDetailPage newsItem={selectedNews} onBack={handleBackFromNewsDetail} />}
+        {currentPage === 'blog-detail' && selectedPost && <BlogDetailPage post={selectedPost} onBack={handleBackFromBlogDetail} />}
         {(currentPage === 'courses-entrance-exam' || 
           currentPage === 'courses-languages' || 
           currentPage === 'courses-programming' || 
