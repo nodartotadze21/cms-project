@@ -5,6 +5,7 @@ import { NewsPage } from './components/pages/NewsPage';
 import { AboutPage } from './components/pages/AboutPage';
 import { ContactPage } from './components/pages/ContactPage';
 import { CoursesPage } from './components/pages/CoursesPage';
+import { BlogPage } from './components/pages/BlogPage';
 import { AdminPanel } from './components/AdminPanel';
 import { Footer } from './components/Footer';
 import { LoginModal } from './components/modals/LoginModal';
@@ -233,6 +234,7 @@ const App: React.FC = () => {
           />
         )}
         {currentPage === 'news' && <NewsPage news={news} isAdmin={isAdmin} onTogglePublish={handleTogglePublish} />}
+        {currentPage === 'blog' && <BlogPage posts={posts} />}
         {(currentPage === 'courses-entrance-exam' || 
           currentPage === 'courses-languages' || 
           currentPage === 'courses-programming' || 

@@ -31,7 +31,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
           onClick={onNewPost}
           className="bg-blue-600 text-white px-6 py-3 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition"
         >
-          <Plus size={20} /> ახალი პოსტი
+          <Plus size={20} /> ახალი ბლოგი
         </button>
       </div>
 

@@ -51,6 +51,7 @@ export const Navigation: React.FC<NavigationProps> = ({
           <div className="hidden md:flex space-x-1 items-center">
             <NavButton page="main" label="მთავარი" />
             <NavButton page="news" label="სიახლეები" />
+            <NavButton page="blog" label="ბლოგი" />
             
             {/* Courses Dropdown */}
             <div className="relative">
@@ -137,6 +138,7 @@ export const Navigation: React.FC<NavigationProps> = ({
         <div className="md:hidden bg-slate-800 px-4 py-2 space-y-1">
           <MobileNavButton page="main" label="მთავარი" />
           <MobileNavButton page="news" label="სიახლეები" />
+          <MobileNavButton page="blog" label="ბლოგი" />
           
           {/* Mobile Courses Section */}
           <div className="space-y-1">
