@@ -26,7 +26,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">
-        <h2 className="text-4xl font-bold text-gray-800">ადმინისტრატორის პანელი</h2>
+        <h2 className="text-4xl font-bold text-gray-800">ფენიქსი - ადმინისტრატორის პანელი</h2>
         <button
           onClick={onNewPost}
           className="bg-blue-600 text-white px-6 py-3 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition"

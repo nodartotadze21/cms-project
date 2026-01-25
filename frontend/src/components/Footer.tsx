@@ -7,8 +7,8 @@ export const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-3 gap-8 mb-8">
           <div>
-            <h3 className="text-xl font-bold mb-4">საგანმანათლებლო ცენტრი</h3>
-            <p className="text-gray-300 mb-4">თანამედროვე განათლება ყველასთვის</p>
+            <h3 className="text-xl font-bold mb-4">ფენიქსი</h3>
+            <p className="text-gray-300 mb-4">ფენიქსი - საგანმანათლებლო ცენტრი. თანამედროვე განათლება ყველასთვის</p>
             <div className="flex gap-4">
               <a href="#" className="hover:text-blue-400 transition">
                 <Facebook size={20} />
@@ -44,7 +44,7 @@ export const Footer: React.FC = () => {
           </div>
         </div>
         <div className="border-t border-blue-800 pt-6 text-center text-gray-300">
-          <p>&copy; 2026 საგანმანათლებლო ცენტრი. ყველა უფლება დაცულია.</p>
+          <p>&copy; 2026 ფენიქსი - საგანმანათლებლო ცენტრი. ყველა უფლება დაცულია.</p>
         </div>
       </div>
     </footer>

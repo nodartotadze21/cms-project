@@ -1,6 +1,6 @@
-# Fullstack CMS
+# ფენიქსი - საგანმანათლებლო ცენტრის CMS
 
-A modern, responsive CMS built with React, TypeScript, and Tailwind CSS.
+মডერული, რესპონსიული CMS ფენიქსის საგანმანათლებლო ცენტრისთვის, რომელი აშენებული React, TypeScript და Tailwind CSS-ით.
 
 ## Project Structure
 
