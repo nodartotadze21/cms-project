@@ -40,7 +40,7 @@ export const ContactPage: React.FC = () => {
                 value={contactForm.email}
                 onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                placeholder="your@email.com"
+                placeholder="თქვენი@ელფოსტა.com"
                 required
               />
             </div>
@@ -124,13 +124,6 @@ export const ContactPage: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  );
-};
-            Send Message
-          </button>
-        </form>
       </div>
     </div>
   );

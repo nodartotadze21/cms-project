@@ -61,7 +61,7 @@ const App: React.FC = () => {
         setNews(newsFromApi);
       } catch (error) {
         // Fallback to localStorage for posts
-        console.log('API unavailable, loading from localStorage');
+        console.log('API დროებით მიუწვდომელია, მონაცემები ჩაიტვირთება localStorage-დან');
         const postsResult = await storage.get(STORAGE_KEYS.POSTS);
         if (postsResult) {
           setPosts(JSON.parse(postsResult.value));
@@ -74,7 +74,7 @@ const App: React.FC = () => {
         setIsAdmin(true);
       }
     } catch (error) {
-      console.log('Loading initial data');
+      console.log('საწყისი მონაცემების ჩატვირთვა');
     } finally {
       setLoading(false);
     }
@@ -86,7 +86,7 @@ const App: React.FC = () => {
       // Save to localStorage as fallback
       await storage.set(STORAGE_KEYS.POSTS, JSON.stringify(updatedPosts));
     } catch (error) {
-      console.error('Error saving data:', error);
+      console.error('მონაცემების შენახვის შეცდომა:', error);
     }
   };
 
@@ -101,7 +101,7 @@ const App: React.FC = () => {
       try {
         await storage.set(STORAGE_KEYS.ADMIN_SESSION, 'true');
       } catch (error) {
-        console.error('Error saving session:', error);
+        console.error('სესიის შენახვის შეცდომა:', error);
       }
     } else {
       alert('არასწორი პაროლი');
@@ -114,7 +114,7 @@ const App: React.FC = () => {
     try {
       await storage.delete(STORAGE_KEYS.ADMIN_SESSION);
     } catch (error) {
-      console.error('Error clearing session:', error);
+      console.error('სესიის გასუფთავების შეცდომა:', error);
     }
   };
 
@@ -156,7 +156,7 @@ const App: React.FC = () => {
         date: new Date().toISOString().split('T')[0]
       });
     } catch (error) {
-      console.error('Error saving post:', error);
+      console.error('პოსტის შენახვის შეცდომა:', error);
       alert('პოსტის შენახვა ვერ მოხერხდა. გთხოვთ სცადოთ თავიდან.');
     }
   };
@@ -168,7 +168,7 @@ const App: React.FC = () => {
         const updatedPosts = posts.filter(p => p.id !== id);
         await saveData(updatedPosts);
       } catch (error) {
-        console.error('Error deleting post:', error);
+        console.error('პოსტის წაშლის შეცდომა:', error);
         alert('პოსტის წაშლა ვერ მოხერხდა. გთხოვთ სცადოთ თავიდან.');
       }
     }
@@ -189,7 +189,7 @@ const App: React.FC = () => {
       });
       setNews(prev => prev.map(n => (n.id === id ? updated : n)));
     } catch (error) {
-      console.error('Error toggling publish:', error);
+      console.error('გამოქვეყნების სტატუსის შეცვლის შეცდომა:', error);
       alert('სტატუსის განახლება ვერ მოხერხდა.');
     }
   };
@@ -209,7 +209,7 @@ const App: React.FC = () => {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600">Loading...</p>
+          <p className="text-gray-600">იტვირთება...</p>
         </div>
       </div>
     );
