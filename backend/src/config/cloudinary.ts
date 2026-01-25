@@ -3,10 +3,17 @@ import { Request } from 'express';
 import multer from 'multer';
 
 // Cloudinary კონფიგურაცია
+console.log('🔧 Cloudinary კონფიგურაცია ჩაიტვირთება...');
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+console.log('✅ Cloudinary დაკონფიგურირდა:', {
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || '❌ არ არის დაყენებული',
+  api_key: process.env.CLOUDINARY_API_KEY ? '✅ დაყენებული' : '❌ არ არის დაყენებული',
+  api_secret: process.env.CLOUDINARY_API_SECRET ? '✅ დაყენებული' : '❌ არ არის დაყენებული',
 });
 
 // Multer კონფიგურაცია (მეხსიერებაში შენახვა)
