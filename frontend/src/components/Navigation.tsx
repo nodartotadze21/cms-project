@@ -49,7 +49,7 @@ export const Navigation: React.FC<NavigationProps> = ({
             className="flex items-center hover:opacity-80 transition"
           >
             <img
-              src="/logo.svg"
+              src="/logo.png"
               alt="საგანმანათლებლო ცენტრი"
               className="h-12 w-auto"
             />
