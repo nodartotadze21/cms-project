@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Post } from '../../types';
 import { Calendar } from 'lucide-react';
+import { BlogDetailModal } from '../modals/BlogDetailModal';
 
 interface BlogPageProps {
   posts: Post[];
 }
 
 export const BlogPage: React.FC<BlogPageProps> = ({ posts }) => {
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  const [showDetail, setShowDetail] = useState(false);
   return (
     <div className="space-y-8">
       <div className="text-center">
@@ -33,13 +36,39 @@ export const BlogPage: React.FC<BlogPageProps> = ({ posts }) => {
                   <Calendar size={16} />
                   {new Date(post.date).toLocaleDateString('ka-GE')}
                 </div>
-                <h3 className="text-2xl sm:text-3xl font-bold mb-3 text-gray-800">{post.title}</h3>
-                <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{post.content}</p>
+                <button
+                  onClick={() => {
+                    setSelectedPost(post);
+                    setShowDetail(true);
+                  }}
+                  className="text-2xl sm:text-3xl font-bold mb-3 text-gray-800 hover:text-blue-600 transition text-left w-full"
+                >
+                  {post.title}
+                </button>
+                <p className="text-gray-700 whitespace-pre-wrap leading-relaxed mb-4 line-clamp-3">{post.content}</p>
+                <button
+                  onClick={() => {
+                    setSelectedPost(post);
+                    setShowDetail(true);
+                  }}
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition"
+                >
+                  ვრცლად
+                </button>
               </div>
             </article>
           ))}
         </div>
       )}
+
+      <BlogDetailModal
+        isOpen={showDetail}
+        onClose={() => {
+          setShowDetail(false);
+          setSelectedPost(null);
+        }}
+        post={selectedPost}
+      />
     </div>
   );
 };

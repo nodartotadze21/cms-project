@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NewsItem } from '../../types';
 import { Calendar, User } from 'lucide-react';
+import { NewsDetailModal } from '../modals/NewsDetailModal';
 
 interface NewsPageProps {
   news: NewsItem[];
@@ -9,6 +10,8 @@ interface NewsPageProps {
 }
 
 export const NewsPage: React.FC<NewsPageProps> = ({ news, isAdmin = false, onTogglePublish }) => {
+  const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
+  const [showDetail, setShowDetail] = useState(false);
   return (
     <div className="space-y-8">
       <div className="text-center">
@@ -40,23 +43,49 @@ export const NewsPage: React.FC<NewsPageProps> = ({ news, isAdmin = false, onTog
                     {item.published ? 'გამოქვეყნებული' : 'გამოუქვეყნებელი'}
                   </div>
                 </div>
-                <h3 className="text-2xl sm:text-3xl font-bold mb-4 text-gray-800">{item.title}</h3>
-                <p className="text-gray-700 whitespace-pre-wrap text-lg leading-relaxed">{item.content}</p>
-                {isAdmin && onTogglePublish && (
-                  <div className="mt-6">
+                <button
+                  onClick={() => {
+                    setSelectedNews(item);
+                    setShowDetail(true);
+                  }}
+                  className="text-2xl sm:text-3xl font-bold mb-4 text-gray-800 hover:text-blue-600 transition text-left w-full"
+                >
+                  {item.title}
+                </button>
+                <p className="text-gray-700 whitespace-pre-wrap text-lg leading-relaxed mb-4 line-clamp-3">{item.content}</p>
+                <div className="flex gap-4">
+                  <button
+                    onClick={() => {
+                      setSelectedNews(item);
+                      setShowDetail(true);
+                    }}
+                    className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition"
+                  >
+                    ვრცლად
+                  </button>
+                  {isAdmin && onTogglePublish && (
                     <button
                       onClick={() => onTogglePublish(item.id)}
                       className={`px-6 py-3 rounded-lg text-white font-semibold transition-all transform hover:scale-105 ${item.published ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-green-600 hover:bg-green-700'}`}
                     >
                       {item.published ? 'გამოქვეყნების გაუქმება' : 'გამოქვეყნება'}
                     </button>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             </article>
           ))}
         </div>
       )}
+
+      <NewsDetailModal
+        isOpen={showDetail}
+        onClose={() => {
+          setShowDetail(false);
+          setSelectedNews(null);
+        }}
+        newsItem={selectedNews}
+      />
     </div>
   );
 };
