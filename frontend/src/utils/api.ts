@@ -2,20 +2,32 @@ const API_BASE_URL = ((import.meta as any).env?.VITE_API_URL as string) || 'http
 
 // სურათის ატვირთვის ფუნქცია
 export async function uploadImage(file: File): Promise<string> {
+  console.log('ფოტოს ატვირთვა დაიწყო:', file.name, 'ზომა:', file.size, 'bytes');
+  
   const formData = new FormData();
   formData.append('image', file);
 
-  const res = await fetch(`${API_BASE_URL}/upload`, {
-    method: 'POST',
-    body: formData,
-  });
+  try {
+    const res = await fetch(`${API_BASE_URL}/upload`, {
+      method: 'POST',
+      body: formData,
+    });
 
-  if (!res.ok) {
-    throw new Error('სურათის ატვირთვა ვერ მოხერხდა');
+    console.log('ატვირთვის პასუხი:', res.status, res.statusText);
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error('ატვირთვის შეცდომა:', errorText);
+      throw new Error(`ატვირთვა ვერ მოხერხდა: ${res.status} ${res.statusText}`);
+    }
+
+    const data = await res.json();
+    console.log('სურათი წარმატებით ატვირთულია:', data.url);
+    return data.url;
+  } catch (error) {
+    console.error('ფოტოს ატვირთვის სრული შეცდომა:', error);
+    throw error;
   }
-
-  const data = await res.json();
-  return data.url;
 }
 
 function normalizePost(doc: any) {
