@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Menu, LogOut, Lock, ChevronDown } from 'lucide-react';
 
 interface NavigationProps {
@@ -18,6 +18,23 @@ export const Navigation: React.FC<NavigationProps> = ({
 }) => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [coursesDropdownOpen, setCoursesDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setCoursesDropdownOpen(false);
+      }
+    };
+
+    if (coursesDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [coursesDropdownOpen]);
 
   const NavButton = ({ page, label }: { page: string; label: string }) => (
     <button
@@ -61,7 +78,7 @@ export const Navigation: React.FC<NavigationProps> = ({
             <NavButton page="blog" label="ბლოგი" />
             
             {/* Courses Dropdown */}
-            <div className="relative">
+            <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setCoursesDropdownOpen(!coursesDropdownOpen)}
                 className={`px-4 py-2 rounded transition flex items-center gap-1 ${

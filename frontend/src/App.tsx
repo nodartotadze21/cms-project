@@ -233,9 +233,43 @@ const App: React.FC = () => {
     setCurrentPage('blog-detail');
   };
 
+  const handleNextPost = () => {
+    if (!selectedPost) return;
+    const currentIndex = posts.findIndex(p => p.id === selectedPost.id);
+    if (currentIndex < posts.length - 1) {
+      setSelectedPost(posts[currentIndex + 1]);
+    }
+  };
+
+  const handlePrevPost = () => {
+    if (!selectedPost) return;
+    const currentIndex = posts.findIndex(p => p.id === selectedPost.id);
+    if (currentIndex > 0) {
+      setSelectedPost(posts[currentIndex - 1]);
+    }
+  };
+
   const handleBackFromNewsDetail = () => {
     setSelectedNews(null);
     setCurrentPage('news');
+  };
+
+  const handleNextNews = () => {
+    if (!selectedNews) return;
+    const publishedNews = news.filter(n => n.published);
+    const currentIndex = publishedNews.findIndex(n => n.id === selectedNews.id);
+    if (currentIndex < publishedNews.length - 1) {
+      setSelectedNews(publishedNews[currentIndex + 1]);
+    }
+  };
+
+  const handlePrevNews = () => {
+    if (!selectedNews) return;
+    const publishedNews = news.filter(n => n.published);
+    const currentIndex = publishedNews.findIndex(n => n.id === selectedNews.id);
+    if (currentIndex > 0) {
+      setSelectedNews(publishedNews[currentIndex - 1]);
+    }
   };
 
   const handleBackFromBlogDetail = () => {
@@ -272,8 +306,26 @@ const App: React.FC = () => {
         )}
         {currentPage === 'news' && <NewsPage news={news} isAdmin={isAdmin} onTogglePublish={handleTogglePublish} onSelectNews={handleSelectNews} />}
         {currentPage === 'blog' && <BlogPage posts={posts} onSelectPost={handleSelectPost} />}
-        {currentPage === 'news-detail' && selectedNews && <NewsDetailPage newsItem={selectedNews} onBack={handleBackFromNewsDetail} />}
-        {currentPage === 'blog-detail' && selectedPost && <BlogDetailPage post={selectedPost} onBack={handleBackFromBlogDetail} />}
+        {currentPage === 'news-detail' && selectedNews && (
+          <NewsDetailPage 
+            newsItem={selectedNews} 
+            onBack={handleBackFromNewsDetail}
+            onNext={handleNextNews}
+            onPrev={handlePrevNews}
+            hasNext={selectedNews ? news.filter(n => n.published).findIndex(n => n.id === selectedNews.id) < news.filter(n => n.published).length - 1 : false}
+            hasPrev={selectedNews ? news.filter(n => n.published).findIndex(n => n.id === selectedNews.id) > 0 : false}
+          />
+        )}
+        {currentPage === 'blog-detail' && selectedPost && (
+          <BlogDetailPage 
+            post={selectedPost} 
+            onBack={handleBackFromBlogDetail}
+            onNext={handleNextPost}
+            onPrev={handlePrevPost}
+            hasNext={selectedPost ? posts.findIndex(p => p.id === selectedPost.id) < posts.length - 1 : false}
+            hasPrev={selectedPost ? posts.findIndex(p => p.id === selectedPost.id) > 0 : false}
+          />
+        )}
         {(currentPage === 'courses-entrance-exam' || 
           currentPage === 'courses-languages' || 
           currentPage === 'courses-programming' || 

@@ -1,13 +1,17 @@
 import React from 'react';
-import { Calendar, User, ChevronLeft, Share2, Facebook, Twitter, Linkedin, Copy } from 'lucide-react';
+import { Calendar, User, ChevronLeft, Share2, Facebook, Twitter, Linkedin, Copy, ChevronRight } from 'lucide-react';
 import { NewsItem } from '../../types';
 
 interface NewsDetailPageProps {
   newsItem: NewsItem | null;
   onBack: () => void;
+  onNext?: () => void;
+  onPrev?: () => void;
+  hasNext?: boolean;
+  hasPrev?: boolean;
 }
 
-export const NewsDetailPage: React.FC<NewsDetailPageProps> = ({ newsItem, onBack }) => {
+export const NewsDetailPage: React.FC<NewsDetailPageProps> = ({ newsItem, onBack, onNext, onPrev, hasNext, hasPrev }) => {
   const [copied, setCopied] = React.useState(false);
 
   React.useEffect(() => {
@@ -139,6 +143,33 @@ export const NewsDetailPage: React.FC<NewsDetailPageProps> = ({ newsItem, onBack
           </div>
         </div>
       </article>
+
+      <div className="flex gap-4 flex-wrap">
+        <button
+          onClick={onPrev}
+          disabled={!hasPrev}
+          className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-lg font-semibold transition ${
+            hasPrev 
+              ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700' 
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          }`}
+        >
+          <ChevronLeft size={20} />
+          წინა სიახლე
+        </button>
+        <button
+          onClick={onNext}
+          disabled={!hasNext}
+          className={`flex-1 flex items-center justify-center gap-2 py-4 rounded-lg font-semibold transition ${
+            hasNext 
+              ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700' 
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          }`}
+        >
+          შემდეგი სიახლე
+          <ChevronRight size={20} />
+        </button>
+      </div>
 
       <button
         onClick={onBack}
